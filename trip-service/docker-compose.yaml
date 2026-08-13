@@ -1,0 +1,14 @@
+services:
+  trip_service_postgresql:
+    image: postgres:15-alpine
+    environment: 
+      - POSTGRES_USER=${SERVICE_USER}
+      - POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD} 
+      - POSTGRES_DB=${POSTGRESQL_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - trip_service_postgresql_data:/var/lib/postgresql/data
+
+volumes:
+  trip_service_postgresql_data:

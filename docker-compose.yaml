@@ -1,0 +1,18 @@
+services:
+    rabbitmq:
+        image: rabbitmq:4.3.4-management-alpine
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        environment:
+            - RABBITMQ_DEFAULT_USER=${SERVICE_USER}
+            - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+        volumes:
+            - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+    rabbitmq_data: 
+
+include:
+    - location-service/docker-compose.yaml
+    - trip-service/docker-compose.yaml
