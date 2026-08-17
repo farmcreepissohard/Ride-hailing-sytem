@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package location;
+
+message MatchingDriverRequest {
+    double latitude = 1;
+    double longitude = 2;
+}
+
+message MatchingDriverResponse {
+    string driver_id = 1;
+}
+
+service Location {
+    rpc MatchingDriver(MatchingDriverRequest) returns (MatchingDriverResponse);
+}
