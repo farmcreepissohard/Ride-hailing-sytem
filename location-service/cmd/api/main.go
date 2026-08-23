@@ -6,10 +6,12 @@ import (
 	"os"
 
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/controllers"
+	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/handlers"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/repositories"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/routes"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/services"
 	"github.com/joho/godotenv"
+	"github.com/rabbitmq/amqp091-go"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -21,14 +23,6 @@ func loadEnv() {
 }
 
 func main() {
-	// r := gin.Default()
-
-	// r.GET("/ping", func(c *gin.Context) {
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"message": "pong",
-	// 		"status":  "success!",
-	// 	})
-	// })
 
 	loadEnv()
 
@@ -37,17 +31,44 @@ func main() {
 		Password: os.Getenv("REDIS_DB_PASSWORD"),
 		DB:       0,
 	})
-
 	defer rdb.Close()
 
-	_, err := rdb.Ping(context.Background()).Result()
-	if err != nil {
+	if _, err := rdb.Ping(context.Background()).Result(); err != nil {
 		panic("Cannot connect to Reids" + err.Error())
 	}
 
 	locationRepo := repositories.NewLocationRepository(rdb)
 	locationService := services.NewLocationService(locationRepo)
 	locationController := controllers.NewLocationController(locationService)
+
+	//-----------------
+
+	conn, err := amqp091.Dial(os.Getenv("AMQP_URL"))
+	defer conn.Close()
+	if err != nil {
+		panic("Failed to connect to RabbitMQ: " + err.Error())
+	}
+
+	ch, err := conn.Channel()
+	defer ch.Close()
+	if err != nil {
+		panic("Failed to open a channel: " + err.Error())
+	}
+
+	queueName := "trip_created_events"
+	if _, err := ch.QueueDeclare(
+		queueName,
+		true,
+		false,
+		false,
+		false,
+		nil,
+	); err != nil {
+		panic("Failed to declare a queue: " + err.Error())
+	}
+
+	tripEventHandler := handlers.NewTripEventHanlder(&locationService)
+	tripEventHandler.Consume(ch, queueName)
 
 	r := routes.SetupRouter(locationController)
 	r.Run(":8081")
