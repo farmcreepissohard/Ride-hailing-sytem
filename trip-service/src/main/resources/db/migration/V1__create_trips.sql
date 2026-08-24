@@ -23,5 +23,5 @@ CREATE TABLE trips(
     completed_at TIMESTAMPTZ,
     cancelled_at TIMESTAMPTZ,
     
-    CONSTRAINT check_status CHECK (trip_status IN ('PENDING', 'ACCEPTED', 'ON TRIP', 'COMPLETED', 'CANCELLED'))
+    CONSTRAINT check_status CHECK (trip_status IN ('PENDING', 'ACCEPTED', 'ON_TRIP', 'COMPLETED', 'CANCELLED'))
 );

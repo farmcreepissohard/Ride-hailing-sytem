@@ -28,14 +28,13 @@ public class TripService {
 
     public String handleTripRequest(String customerId, TripRequestDto tripRequestDto) {
 
-        log.info("wtf ok?");
-
         final double pickupLongitude = tripRequestDto.getPickupLocation().getLng();
         final double pickupLatitude = tripRequestDto.getPickupLocation().getLat();
         final double dropoffLongitude = tripRequestDto.getDropoffLocation().getLng();
         final double dropoffLatitude = tripRequestDto.getDropoffLocation().getLat();
 
-        String url = String.format(Locale.US, "%s/%f,%f;%f,%f?overview=false", configurationProperties.getOsrmBaseUrl(),
+        final String url = String.format(Locale.US, "%s/%f,%f;%f,%f?overview=false",
+                configurationProperties.getOsrmBaseUrl(),
                 pickupLongitude, pickupLatitude,
                 dropoffLongitude, dropoffLatitude);
 
@@ -52,13 +51,13 @@ public class TripService {
                     .body(JsonNode.class);
 
             if (response != null && response.has("routes") && response.get("routes").size() > 0) {
-                double distanceInMeters = response.get("routes").get(0).get("distance").asDouble();
-                double distanceInKm = distanceInMeters / 1000.0;
+                final double distanceInMeters = response.get("routes").get(0).get("distance").asDouble();
+                final double distanceInKm = distanceInMeters / 1000.0;
 
-                BigDecimal totalAmount = BigDecimal.valueOf(configurationProperties.getBaseFare())
+                final BigDecimal totalAmount = BigDecimal.valueOf(configurationProperties.getBaseFare())
                         .add(BigDecimal.valueOf(Math.max(0, distanceInKm - 3)).multiply(
                                 BigDecimal.valueOf(configurationProperties.getPricePerKm())));
-                BigDecimal driverEarning = totalAmount.multiply(
+                final BigDecimal driverEarning = totalAmount.multiply(
                         BigDecimal.valueOf(configurationProperties.getDriverCommission()))
                         .divide(BigDecimal.valueOf(100));
 

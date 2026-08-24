@@ -67,7 +67,7 @@ func (ResponseStatus) EnumDescriptor() ([]byte, []int) {
 	return file_trip_command_proto_rawDescGZIP(), []int{0}
 }
 
-type MatchTripRequest struct {
+type TripActionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TripId        string                 `protobuf:"bytes,1,opt,name=trip_id,json=tripId,proto3" json:"trip_id,omitempty"`
 	DriverId      string                 `protobuf:"bytes,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`
@@ -75,20 +75,20 @@ type MatchTripRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *MatchTripRequest) Reset() {
-	*x = MatchTripRequest{}
+func (x *TripActionRequest) Reset() {
+	*x = TripActionRequest{}
 	mi := &file_trip_command_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MatchTripRequest) String() string {
+func (x *TripActionRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MatchTripRequest) ProtoMessage() {}
+func (*TripActionRequest) ProtoMessage() {}
 
-func (x *MatchTripRequest) ProtoReflect() protoreflect.Message {
+func (x *TripActionRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_trip_command_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -100,91 +100,23 @@ func (x *MatchTripRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MatchTripRequest.ProtoReflect.Descriptor instead.
-func (*MatchTripRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use TripActionRequest.ProtoReflect.Descriptor instead.
+func (*TripActionRequest) Descriptor() ([]byte, []int) {
 	return file_trip_command_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *MatchTripRequest) GetTripId() string {
+func (x *TripActionRequest) GetTripId() string {
 	if x != nil {
 		return x.TripId
 	}
 	return ""
 }
 
-func (x *MatchTripRequest) GetDriverId() string {
+func (x *TripActionRequest) GetDriverId() string {
 	if x != nil {
 		return x.DriverId
 	}
 	return ""
-}
-
-type TripStateRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TripId        string                 `protobuf:"bytes,1,opt,name=trip_id,json=tripId,proto3" json:"trip_id,omitempty"`
-	DriverId      string                 `protobuf:"bytes,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`
-	DriverLat     float64                `protobuf:"fixed64,3,opt,name=driver_lat,json=driverLat,proto3" json:"driver_lat,omitempty"`
-	DriverLng     float64                `protobuf:"fixed64,4,opt,name=driver_lng,json=driverLng,proto3" json:"driver_lng,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *TripStateRequest) Reset() {
-	*x = TripStateRequest{}
-	mi := &file_trip_command_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *TripStateRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*TripStateRequest) ProtoMessage() {}
-
-func (x *TripStateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_trip_command_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use TripStateRequest.ProtoReflect.Descriptor instead.
-func (*TripStateRequest) Descriptor() ([]byte, []int) {
-	return file_trip_command_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *TripStateRequest) GetTripId() string {
-	if x != nil {
-		return x.TripId
-	}
-	return ""
-}
-
-func (x *TripStateRequest) GetDriverId() string {
-	if x != nil {
-		return x.DriverId
-	}
-	return ""
-}
-
-func (x *TripStateRequest) GetDriverLat() float64 {
-	if x != nil {
-		return x.DriverLat
-	}
-	return 0
-}
-
-func (x *TripStateRequest) GetDriverLng() float64 {
-	if x != nil {
-		return x.DriverLng
-	}
-	return 0
 }
 
 type CancelTripRequest struct {
@@ -198,7 +130,7 @@ type CancelTripRequest struct {
 
 func (x *CancelTripRequest) Reset() {
 	*x = CancelTripRequest{}
-	mi := &file_trip_command_proto_msgTypes[2]
+	mi := &file_trip_command_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -210,7 +142,7 @@ func (x *CancelTripRequest) String() string {
 func (*CancelTripRequest) ProtoMessage() {}
 
 func (x *CancelTripRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_trip_command_proto_msgTypes[2]
+	mi := &file_trip_command_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -223,7 +155,7 @@ func (x *CancelTripRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelTripRequest.ProtoReflect.Descriptor instead.
 func (*CancelTripRequest) Descriptor() ([]byte, []int) {
-	return file_trip_command_proto_rawDescGZIP(), []int{2}
+	return file_trip_command_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *CancelTripRequest) GetTripId() string {
@@ -258,7 +190,7 @@ type TripResponse struct {
 
 func (x *TripResponse) Reset() {
 	*x = TripResponse{}
-	mi := &file_trip_command_proto_msgTypes[3]
+	mi := &file_trip_command_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -270,7 +202,7 @@ func (x *TripResponse) String() string {
 func (*TripResponse) ProtoMessage() {}
 
 func (x *TripResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_trip_command_proto_msgTypes[3]
+	mi := &file_trip_command_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -283,7 +215,7 @@ func (x *TripResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TripResponse.ProtoReflect.Descriptor instead.
 func (*TripResponse) Descriptor() ([]byte, []int) {
-	return file_trip_command_proto_rawDescGZIP(), []int{3}
+	return file_trip_command_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *TripResponse) GetTripId() string {
@@ -311,17 +243,10 @@ var File_trip_command_proto protoreflect.FileDescriptor
 
 const file_trip_command_proto_rawDesc = "" +
 	"\n" +
-	"\x12trip_command.proto\x12\x04trip\"H\n" +
-	"\x10MatchTripRequest\x12\x17\n" +
+	"\x12trip_command.proto\x12\x04trip\"I\n" +
+	"\x11TripActionRequest\x12\x17\n" +
 	"\atrip_id\x18\x01 \x01(\tR\x06tripId\x12\x1b\n" +
-	"\tdriver_id\x18\x02 \x01(\tR\bdriverId\"\x86\x01\n" +
-	"\x10TripStateRequest\x12\x17\n" +
-	"\atrip_id\x18\x01 \x01(\tR\x06tripId\x12\x1b\n" +
-	"\tdriver_id\x18\x02 \x01(\tR\bdriverId\x12\x1d\n" +
-	"\n" +
-	"driver_lat\x18\x03 \x01(\x01R\tdriverLat\x12\x1d\n" +
-	"\n" +
-	"driver_lng\x18\x04 \x01(\x01R\tdriverLng\"l\n" +
+	"\tdriver_id\x18\x02 \x01(\tR\bdriverId\"l\n" +
 	"\x11CancelTripRequest\x12\x17\n" +
 	"\atrip_id\x18\x01 \x01(\tR\x06tripId\x12&\n" +
 	"\x0fid_cancelled_by\x18\x02 \x01(\tR\ridCancelledBy\x12\x16\n" +
@@ -334,11 +259,11 @@ const file_trip_command_proto_rawDesc = "" +
 	"\b_message*,\n" +
 	"\x0eResponseStatus\x12\v\n" +
 	"\aSUCCESS\x10\x00\x12\r\n" +
-	"\tUNSUCCESS\x10\x012\x80\x02\n" +
-	"\x15UpdateTripInformation\x127\n" +
-	"\tMatchTrip\x12\x16.trip.MatchTripRequest\x1a\x12.trip.TripResponse\x127\n" +
-	"\tStartTrip\x12\x16.trip.TripStateRequest\x1a\x12.trip.TripResponse\x12:\n" +
-	"\fCompleteTrip\x12\x16.trip.TripStateRequest\x1a\x12.trip.TripResponse\x129\n" +
+	"\tUNSUCCESS\x10\x012\x83\x02\n" +
+	"\x15UpdateTripInformation\x128\n" +
+	"\tMatchTrip\x12\x17.trip.TripActionRequest\x1a\x12.trip.TripResponse\x128\n" +
+	"\tStartTrip\x12\x17.trip.TripActionRequest\x1a\x12.trip.TripResponse\x12;\n" +
+	"\fCompleteTrip\x12\x17.trip.TripActionRequest\x1a\x12.trip.TripResponse\x129\n" +
 	"\n" +
 	"CancelTrip\x12\x17.trip.CancelTripRequest\x1a\x12.trip.TripResponseB\x1d\n" +
 	"\x0fcom.goride.grpcP\x01Z\b./pkg/pbb\x06proto3"
@@ -356,24 +281,23 @@ func file_trip_command_proto_rawDescGZIP() []byte {
 }
 
 var file_trip_command_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_trip_command_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_trip_command_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_trip_command_proto_goTypes = []any{
 	(ResponseStatus)(0),       // 0: trip.ResponseStatus
-	(*MatchTripRequest)(nil),  // 1: trip.MatchTripRequest
-	(*TripStateRequest)(nil),  // 2: trip.TripStateRequest
-	(*CancelTripRequest)(nil), // 3: trip.CancelTripRequest
-	(*TripResponse)(nil),      // 4: trip.TripResponse
+	(*TripActionRequest)(nil), // 1: trip.TripActionRequest
+	(*CancelTripRequest)(nil), // 2: trip.CancelTripRequest
+	(*TripResponse)(nil),      // 3: trip.TripResponse
 }
 var file_trip_command_proto_depIdxs = []int32{
 	0, // 0: trip.TripResponse.status:type_name -> trip.ResponseStatus
-	1, // 1: trip.UpdateTripInformation.MatchTrip:input_type -> trip.MatchTripRequest
-	2, // 2: trip.UpdateTripInformation.StartTrip:input_type -> trip.TripStateRequest
-	2, // 3: trip.UpdateTripInformation.CompleteTrip:input_type -> trip.TripStateRequest
-	3, // 4: trip.UpdateTripInformation.CancelTrip:input_type -> trip.CancelTripRequest
-	4, // 5: trip.UpdateTripInformation.MatchTrip:output_type -> trip.TripResponse
-	4, // 6: trip.UpdateTripInformation.StartTrip:output_type -> trip.TripResponse
-	4, // 7: trip.UpdateTripInformation.CompleteTrip:output_type -> trip.TripResponse
-	4, // 8: trip.UpdateTripInformation.CancelTrip:output_type -> trip.TripResponse
+	1, // 1: trip.UpdateTripInformation.MatchTrip:input_type -> trip.TripActionRequest
+	1, // 2: trip.UpdateTripInformation.StartTrip:input_type -> trip.TripActionRequest
+	1, // 3: trip.UpdateTripInformation.CompleteTrip:input_type -> trip.TripActionRequest
+	2, // 4: trip.UpdateTripInformation.CancelTrip:input_type -> trip.CancelTripRequest
+	3, // 5: trip.UpdateTripInformation.MatchTrip:output_type -> trip.TripResponse
+	3, // 6: trip.UpdateTripInformation.StartTrip:output_type -> trip.TripResponse
+	3, // 7: trip.UpdateTripInformation.CompleteTrip:output_type -> trip.TripResponse
+	3, // 8: trip.UpdateTripInformation.CancelTrip:output_type -> trip.TripResponse
 	5, // [5:9] is the sub-list for method output_type
 	1, // [1:5] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -386,14 +310,14 @@ func file_trip_command_proto_init() {
 	if File_trip_command_proto != nil {
 		return
 	}
-	file_trip_command_proto_msgTypes[3].OneofWrappers = []any{}
+	file_trip_command_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_trip_command_proto_rawDesc), len(file_trip_command_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   4,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -29,9 +29,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UpdateTripInformationClient interface {
-	MatchTrip(ctx context.Context, in *MatchTripRequest, opts ...grpc.CallOption) (*TripResponse, error)
-	StartTrip(ctx context.Context, in *TripStateRequest, opts ...grpc.CallOption) (*TripResponse, error)
-	CompleteTrip(ctx context.Context, in *TripStateRequest, opts ...grpc.CallOption) (*TripResponse, error)
+	MatchTrip(ctx context.Context, in *TripActionRequest, opts ...grpc.CallOption) (*TripResponse, error)
+	StartTrip(ctx context.Context, in *TripActionRequest, opts ...grpc.CallOption) (*TripResponse, error)
+	CompleteTrip(ctx context.Context, in *TripActionRequest, opts ...grpc.CallOption) (*TripResponse, error)
 	CancelTrip(ctx context.Context, in *CancelTripRequest, opts ...grpc.CallOption) (*TripResponse, error)
 }
 
@@ -43,7 +43,7 @@ func NewUpdateTripInformationClient(cc grpc.ClientConnInterface) UpdateTripInfor
 	return &updateTripInformationClient{cc}
 }
 
-func (c *updateTripInformationClient) MatchTrip(ctx context.Context, in *MatchTripRequest, opts ...grpc.CallOption) (*TripResponse, error) {
+func (c *updateTripInformationClient) MatchTrip(ctx context.Context, in *TripActionRequest, opts ...grpc.CallOption) (*TripResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TripResponse)
 	err := c.cc.Invoke(ctx, UpdateTripInformation_MatchTrip_FullMethodName, in, out, cOpts...)
@@ -53,7 +53,7 @@ func (c *updateTripInformationClient) MatchTrip(ctx context.Context, in *MatchTr
 	return out, nil
 }
 
-func (c *updateTripInformationClient) StartTrip(ctx context.Context, in *TripStateRequest, opts ...grpc.CallOption) (*TripResponse, error) {
+func (c *updateTripInformationClient) StartTrip(ctx context.Context, in *TripActionRequest, opts ...grpc.CallOption) (*TripResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TripResponse)
 	err := c.cc.Invoke(ctx, UpdateTripInformation_StartTrip_FullMethodName, in, out, cOpts...)
@@ -63,7 +63,7 @@ func (c *updateTripInformationClient) StartTrip(ctx context.Context, in *TripSta
 	return out, nil
 }
 
-func (c *updateTripInformationClient) CompleteTrip(ctx context.Context, in *TripStateRequest, opts ...grpc.CallOption) (*TripResponse, error) {
+func (c *updateTripInformationClient) CompleteTrip(ctx context.Context, in *TripActionRequest, opts ...grpc.CallOption) (*TripResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TripResponse)
 	err := c.cc.Invoke(ctx, UpdateTripInformation_CompleteTrip_FullMethodName, in, out, cOpts...)
@@ -87,9 +87,9 @@ func (c *updateTripInformationClient) CancelTrip(ctx context.Context, in *Cancel
 // All implementations must embed UnimplementedUpdateTripInformationServer
 // for forward compatibility.
 type UpdateTripInformationServer interface {
-	MatchTrip(context.Context, *MatchTripRequest) (*TripResponse, error)
-	StartTrip(context.Context, *TripStateRequest) (*TripResponse, error)
-	CompleteTrip(context.Context, *TripStateRequest) (*TripResponse, error)
+	MatchTrip(context.Context, *TripActionRequest) (*TripResponse, error)
+	StartTrip(context.Context, *TripActionRequest) (*TripResponse, error)
+	CompleteTrip(context.Context, *TripActionRequest) (*TripResponse, error)
 	CancelTrip(context.Context, *CancelTripRequest) (*TripResponse, error)
 	mustEmbedUnimplementedUpdateTripInformationServer()
 }
@@ -101,13 +101,13 @@ type UpdateTripInformationServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUpdateTripInformationServer struct{}
 
-func (UnimplementedUpdateTripInformationServer) MatchTrip(context.Context, *MatchTripRequest) (*TripResponse, error) {
+func (UnimplementedUpdateTripInformationServer) MatchTrip(context.Context, *TripActionRequest) (*TripResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MatchTrip not implemented")
 }
-func (UnimplementedUpdateTripInformationServer) StartTrip(context.Context, *TripStateRequest) (*TripResponse, error) {
+func (UnimplementedUpdateTripInformationServer) StartTrip(context.Context, *TripActionRequest) (*TripResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method StartTrip not implemented")
 }
-func (UnimplementedUpdateTripInformationServer) CompleteTrip(context.Context, *TripStateRequest) (*TripResponse, error) {
+func (UnimplementedUpdateTripInformationServer) CompleteTrip(context.Context, *TripActionRequest) (*TripResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CompleteTrip not implemented")
 }
 func (UnimplementedUpdateTripInformationServer) CancelTrip(context.Context, *CancelTripRequest) (*TripResponse, error) {
@@ -135,7 +135,7 @@ func RegisterUpdateTripInformationServer(s grpc.ServiceRegistrar, srv UpdateTrip
 }
 
 func _UpdateTripInformation_MatchTrip_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MatchTripRequest)
+	in := new(TripActionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -147,13 +147,13 @@ func _UpdateTripInformation_MatchTrip_Handler(srv interface{}, ctx context.Conte
 		FullMethod: UpdateTripInformation_MatchTrip_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UpdateTripInformationServer).MatchTrip(ctx, req.(*MatchTripRequest))
+		return srv.(UpdateTripInformationServer).MatchTrip(ctx, req.(*TripActionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _UpdateTripInformation_StartTrip_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TripStateRequest)
+	in := new(TripActionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -165,13 +165,13 @@ func _UpdateTripInformation_StartTrip_Handler(srv interface{}, ctx context.Conte
 		FullMethod: UpdateTripInformation_StartTrip_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UpdateTripInformationServer).StartTrip(ctx, req.(*TripStateRequest))
+		return srv.(UpdateTripInformationServer).StartTrip(ctx, req.(*TripActionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _UpdateTripInformation_CompleteTrip_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TripStateRequest)
+	in := new(TripActionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -183,7 +183,7 @@ func _UpdateTripInformation_CompleteTrip_Handler(srv interface{}, ctx context.Co
 		FullMethod: UpdateTripInformation_CompleteTrip_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UpdateTripInformationServer).CompleteTrip(ctx, req.(*TripStateRequest))
+		return srv.(UpdateTripInformationServer).CompleteTrip(ctx, req.(*TripActionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

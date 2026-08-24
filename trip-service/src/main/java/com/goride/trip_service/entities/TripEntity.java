@@ -6,8 +6,12 @@ import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.goride.trip_service.enums.TripStatusEnum;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -61,7 +65,8 @@ public class TripEntity {
     private BigDecimal driverEarning;
 
     @Column(name = "trip_status", nullable = false, length = 20)
-    private String tripStatus = "PENDING";
+    @Enumerated(EnumType.STRING)
+    private TripStatusEnum tripStatus = TripStatusEnum.PENDING;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
@@ -82,6 +87,14 @@ public class TripEntity {
     @Column(name = "cancelled_at")
     @Setter
     private OffsetDateTime cancelledAt;
+
+    @Column(name = "cancelled_by")
+    @Setter
+    private UUID cancelledBy;
+
+    @Column(name = "cancelled_reason", columnDefinition = "TEXT")
+    @Setter
+    private String cancelledReason;
 
     public TripEntity(UUID customerId, String pickupAddress, String dropoffAddress,
             double pickupLatitude, double pickupLongitude, double dropoffLatitude, double dropoffLongitude,
