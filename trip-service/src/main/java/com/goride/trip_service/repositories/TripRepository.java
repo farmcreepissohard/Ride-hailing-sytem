@@ -12,58 +12,58 @@ import com.goride.trip_service.entities.TripEntity;
 
 public interface TripRepository extends JpaRepository<TripEntity, UUID> {
 
-        @Modifying(clearAutomatically = true)
-        @Query(value = """
-                        UPDATE trips
-                        SET driver_id = :driver_id,
-                            trip_status = 'ACCEPTED',
-                            accepted_at = NOW()
-                        WHERE id = :trip_id
-                        RETURNING id
-                        """, nativeQuery = true)
-        Optional<UUID> matchingTrip(
-                        @Param("trip_id") UUID tripId,
-                        @Param("driver_id") UUID driverId);
+	@Modifying(clearAutomatically = true)
+	@Query(value = """
+			UPDATE trips
+			SET driver_id = :driver_id,
+			    trip_status = 'ACCEPTED',
+			    accepted_at = NOW()
+			WHERE id = :trip_id
+			RETURNING id
+			""", nativeQuery = true)
+	Optional<UUID> matchingTrip(
+			@Param("trip_id") UUID tripId,
+			@Param("driver_id") UUID driverId);
 
-        @Modifying(clearAutomatically = true)
-        @Query(value = """
-                        UPDATE trips
-                        SET trip_status = 'ON_TRIP',
-                                pickedup_at = NOW()
-                        WHERE id = :trip_id AND driver_id = :driver_id AND trip_status = 'ACCEPTED'
-                        RETURNING id
-                        """, nativeQuery = true)
-        Optional<UUID> startTrip(
-                        @Param("trip_id") UUID tripId,
-                        @Param("driver_id") UUID driverId);
+	@Modifying(clearAutomatically = true)
+	@Query(value = """
+			UPDATE trips
+			SET trip_status = 'ON_TRIP',
+			        pickedup_at = NOW()
+			WHERE id = :trip_id AND driver_id = :driver_id AND trip_status = 'ACCEPTED'
+			RETURNING id
+			""", nativeQuery = true)
+	Optional<UUID> startTrip(
+			@Param("trip_id") UUID tripId,
+			@Param("driver_id") UUID driverId);
 
-        @Modifying(clearAutomatically = true)
-        @Query(value = """
-                        UPDATE trips
-                        SET trip_status = 'COMPLETED',
-                                completed_at = NOW()
-                        WHERE id = :trip_id AND driver_id = :driver_id AND trip_status = 'ON_TRIP'
-                        RETURNING id
-                        """, nativeQuery = true)
-        Optional<UUID> completeTrip(
-                        @Param("trip_id") UUID tripId,
-                        @Param("driver_id") UUID driverId);
+	@Modifying(clearAutomatically = true)
+	@Query(value = """
+			UPDATE trips
+			SET trip_status = 'COMPLETED',
+			        completed_at = NOW()
+			WHERE id = :trip_id AND driver_id = :driver_id AND trip_status = 'ON_TRIP'
+			RETURNING id
+			""", nativeQuery = true)
+	Optional<UUID> completeTrip(
+			@Param("trip_id") UUID tripId,
+			@Param("driver_id") UUID driverId);
 
-        @Modifying(clearAutomatically = true)
-        @Query(value = """
-                        UPDATE trips
-                        SET trip_status = 'CANCELLED',
-                                cancelled_at = NOW(),
-                                cancelled_by = :cancelled_by,
-                                cancelled_reason = :cancelled_reason
-                        WHERE id = :trip_id
-                                AND (driver_id = :cancelled_by OR customer_id = :cancelled_by)
-                                AND trip_status IN ('PENDING', 'ACCEPTED')
-                        RETURNING id
-                        """, nativeQuery = true)
-        Optional<UUID> cancelTrip(
-                        @Param("trip_id") UUID tripId,
-                        @Param("cancelled_by") UUID cancelledBy,
-                        @Param("cancelled_reason") String cancelledReason);
+	@Modifying(clearAutomatically = true)
+	@Query(value = """
+			UPDATE trips
+			SET trip_status = 'CANCELLED',
+			        cancelled_at = NOW(),
+			        cancelled_by = :cancelled_by,
+			        cancelled_reason = :cancelled_reason
+			WHERE id = :trip_id
+			        AND (driver_id = :cancelled_by OR customer_id = :cancelled_by)
+			        AND trip_status IN ('PENDING', 'ACCEPTED')
+			RETURNING id
+			""", nativeQuery = true)
+	Optional<UUID> cancelTrip(
+			@Param("trip_id") UUID tripId,
+			@Param("cancelled_by") UUID cancelledBy,
+			@Param("cancelled_reason") String cancelledReason);
 
 }
