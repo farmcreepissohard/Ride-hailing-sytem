@@ -1,6 +1,5 @@
 package com.goride.trip_service.repositories;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,9 +18,8 @@ public interface TripRepository extends JpaRepository<TripEntity, UUID> {
 			    trip_status = 'ACCEPTED',
 			    accepted_at = NOW()
 			WHERE id = :trip_id
-			RETURNING id
 			""", nativeQuery = true)
-	Optional<UUID> matchingTrip(
+	int matchingTrip(
 			@Param("trip_id") UUID tripId,
 			@Param("driver_id") UUID driverId);
 
@@ -31,9 +29,8 @@ public interface TripRepository extends JpaRepository<TripEntity, UUID> {
 			SET trip_status = 'ON_TRIP',
 			        pickedup_at = NOW()
 			WHERE id = :trip_id AND driver_id = :driver_id AND trip_status = 'ACCEPTED'
-			RETURNING id
 			""", nativeQuery = true)
-	Optional<UUID> startTrip(
+	int startTrip(
 			@Param("trip_id") UUID tripId,
 			@Param("driver_id") UUID driverId);
 
@@ -43,9 +40,8 @@ public interface TripRepository extends JpaRepository<TripEntity, UUID> {
 			SET trip_status = 'COMPLETED',
 			        completed_at = NOW()
 			WHERE id = :trip_id AND driver_id = :driver_id AND trip_status = 'ON_TRIP'
-			RETURNING id
 			""", nativeQuery = true)
-	Optional<UUID> completeTrip(
+	int completeTrip(
 			@Param("trip_id") UUID tripId,
 			@Param("driver_id") UUID driverId);
 
@@ -59,9 +55,8 @@ public interface TripRepository extends JpaRepository<TripEntity, UUID> {
 			WHERE id = :trip_id
 			        AND (driver_id = :cancelled_by OR customer_id = :cancelled_by)
 			        AND trip_status IN ('PENDING', 'ACCEPTED')
-			RETURNING id
 			""", nativeQuery = true)
-	Optional<UUID> cancelTrip(
+	int cancelTrip(
 			@Param("trip_id") UUID tripId,
 			@Param("cancelled_by") UUID cancelledBy,
 			@Param("cancelled_reason") String cancelledReason);

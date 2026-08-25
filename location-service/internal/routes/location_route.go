@@ -12,6 +12,7 @@ func SetupRouter(locationController *controllers.LocationController) *gin.Engine
 	{
 		v1.PATCH("/driver", locationController.ChangeStatus)
 		v1.PUT("/location", locationController.UpdateLocation)
+		v1.POST("/trips/:tripId/accept", locationController.AcceptTrip)
 	}
 
 	return r

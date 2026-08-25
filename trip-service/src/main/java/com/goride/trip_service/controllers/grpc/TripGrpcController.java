@@ -11,7 +11,9 @@ import com.goride.trip_service.services.TripService;
 
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @GrpcService
 @RequiredArgsConstructor
 public class TripGrpcController extends UpdateTripInformationImplBase {
@@ -36,26 +38,66 @@ public class TripGrpcController extends UpdateTripInformationImplBase {
 
     @Override
     public void matchTrip(TripActionRequest request, StreamObserver<TripResponse> responseObserver) {
-        final boolean isSuccess = tripService.matchTrip(request.getTripId(), request.getDriverId());
-        handleResponse(isSuccess, responseObserver, request.getTripId(), "Trip not found");
+        try {
+            final boolean isSuccess = tripService.matchTrip(request.getTripId(), request.getDriverId());
+            handleResponse(isSuccess, responseObserver, request.getTripId(), "Trip not found");
+        } catch (Exception e) {
+            System.err.println("MatchTrip] Error: " + e.getMessage());
+            e.printStackTrace();
+
+            responseObserver.onError(
+                    io.grpc.Status.UNKNOWN
+                            .withDescription("Lỗi nội bộ Java: " + e.getMessage())
+                            .asRuntimeException());
+        }
     }
 
     public void startTrip(TripActionRequest request,
             StreamObserver<com.goride.grpc.TripResponse> responseObserver) {
-        final boolean isSuccess = tripService.startTrip(request.getTripId(), request.getDriverId());
-        handleResponse(isSuccess, responseObserver, request.getTripId(), "Forbidden on starting trip");
+        try {
+            final boolean isSuccess = tripService.startTrip(request.getTripId(), request.getDriverId());
+            handleResponse(isSuccess, responseObserver, request.getTripId(), "Forbidden on starting trip");
+        } catch (Exception e) {
+            System.err.println("StartTrip] Error: " + e.getMessage());
+            e.printStackTrace();
+
+            responseObserver.onError(
+                    io.grpc.Status.UNKNOWN
+                            .withDescription("Lỗi nội bộ Java: " + e.getMessage())
+                            .asRuntimeException());
+        }
     }
 
     public void completeTrip(TripActionRequest request,
             StreamObserver<com.goride.grpc.TripResponse> responseObserver) {
-        final boolean isSuccess = tripService.comepleteTrip(request.getTripId(), request.getDriverId());
-        handleResponse(isSuccess, responseObserver, request.getTripId(), "Forbidden on completing trip");
+        try {
+            final boolean isSuccess = tripService.comepleteTrip(request.getTripId(), request.getDriverId());
+            handleResponse(isSuccess, responseObserver, request.getTripId(), "Forbidden on completing trip");
+        } catch (Exception e) {
+            System.err.println("CompleteTrip] Error: " + e.getMessage());
+            e.printStackTrace();
+
+            responseObserver.onError(
+                    io.grpc.Status.UNKNOWN
+                            .withDescription("Lỗi nội bộ Java: " + e.getMessage())
+                            .asRuntimeException());
+        }
     }
 
     public void cancelTrip(CancelTripRequest request,
             StreamObserver<com.goride.grpc.TripResponse> responseObserver) {
-        final boolean isSuccess = tripService.cancelTrip(request.getTripId(), request.getIdCancelledBy(),
-                request.getReason());
-        handleResponse(isSuccess, responseObserver, request.getTripId(), "Forbidden on cancelling trip");
+        try {
+            final boolean isSuccess = tripService.cancelTrip(request.getTripId(), request.getIdCancelledBy(),
+                    request.getReason());
+            handleResponse(isSuccess, responseObserver, request.getTripId(), "Forbidden on cancelling trip");
+        } catch (Exception e) {
+            System.err.println("CancelTrip] Error: " + e.getMessage());
+            e.printStackTrace();
+
+            responseObserver.onError(
+                    io.grpc.Status.UNKNOWN
+                            .withDescription("Lỗi nội bộ Java: " + e.getMessage())
+                            .asRuntimeException());
+        }
     }
 }

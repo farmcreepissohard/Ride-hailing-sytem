@@ -17,7 +17,6 @@ func NewLocationController(service services.LocationService) *LocationController
 }
 
 func (controller *LocationController) ChangeStatus(c *gin.Context) {
-
 	id := c.GetHeader("X-Driver-Id")
 	if id == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
@@ -39,7 +38,6 @@ func (controller *LocationController) ChangeStatus(c *gin.Context) {
 }
 
 func (controller *LocationController) UpdateLocation(c *gin.Context) {
-
 	id := c.GetHeader("X-Driver-Id")
 	if id == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
@@ -58,4 +56,25 @@ func (controller *LocationController) UpdateLocation(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusNoContent, gin.H{})
+}
+
+func (controller *LocationController) AcceptTrip(c *gin.Context) {
+	id := c.GetHeader("X-Driver-Id")
+	if id == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	tripId := c.Param("tripId")
+	if tripId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid trip id"})
+		return
+	}
+
+	if err := controller.service.AcceptTrip(c.Request.Context(), tripId, id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "accept successfully"})
 }

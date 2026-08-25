@@ -6,13 +6,17 @@ import (
 	"os"
 
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/controllers"
+	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/grpc_client"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/handlers"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/repositories"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/routes"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/services"
+	"github.com/farmcreepissohard/Ride-hailing-sytem/pkg/pb"
 	"github.com/joho/godotenv"
 	"github.com/rabbitmq/amqp091-go"
 	"github.com/redis/go-redis/v9"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func loadEnv() {
@@ -23,7 +27,6 @@ func loadEnv() {
 }
 
 func main() {
-
 	loadEnv()
 
 	rdb := redis.NewClient(&redis.Options{
@@ -34,11 +37,22 @@ func main() {
 	defer rdb.Close()
 
 	if _, err := rdb.Ping(context.Background()).Result(); err != nil {
-		panic("Cannot connect to Reids" + err.Error())
+		panic("Cannot connect to Reids " + err.Error())
 	}
 
 	locationRepo := repositories.NewLocationRepository(rdb)
-	locationService := services.NewLocationService(locationRepo)
+
+	//-----------------
+
+	grpcConn, err := grpc.NewClient(os.Getenv("GRPC_ADDRESS"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	defer grpcConn.Close()
+	if err != nil {
+		panic("Cannot connect to grpc " + err.Error())
+	}
+
+	grpcClient := grpc_client.NewTripGrpcClient(pb.NewUpdateTripInformationClient(grpcConn), grpcConn)
+	locationService := services.NewLocationService(grpcClient, locationRepo)
+
 	locationController := controllers.NewLocationController(locationService)
 
 	//-----------------

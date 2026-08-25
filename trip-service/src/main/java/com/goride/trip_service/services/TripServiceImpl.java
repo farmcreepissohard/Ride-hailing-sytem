@@ -2,7 +2,6 @@ package com.goride.trip_service.services;
 
 import java.math.BigDecimal;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -89,28 +88,25 @@ public class TripServiceImpl implements TripService {
 
     @Transactional
     public boolean matchTrip(final String tripId, final String driverId) {
-        final Optional<UUID> response = tripRepository.matchingTrip(UUID.fromString(tripId), UUID.fromString(driverId));
-        return response.isPresent();
+        int updatedRows = tripRepository.matchingTrip(UUID.fromString(tripId), UUID.fromString(driverId));
+        return updatedRows > 0;
     }
 
     @Transactional
     public boolean startTrip(final String tripId, final String driverId) {
-        final Optional<UUID> response = tripRepository.startTrip(UUID.fromString(tripId),
-                UUID.fromString(driverId));
-        return response.isPresent();
+        int updatedRows = tripRepository.startTrip(UUID.fromString(tripId), UUID.fromString(driverId));
+        return updatedRows > 0;
     }
 
     @Transactional
     public boolean comepleteTrip(final String tripId, final String driverId) {
-        final Optional<UUID> response = tripRepository.completeTrip(UUID.fromString(tripId),
-                UUID.fromString(driverId));
-        return response.isPresent();
+        int updatedRows = tripRepository.completeTrip(UUID.fromString(tripId), UUID.fromString(driverId));
+        return updatedRows > 0;
     }
 
     @Transactional
     public boolean cancelTrip(final String tripId, final String cancelledBy, final String reason) {
-        final Optional<UUID> response = tripRepository.cancelTrip(UUID.fromString(tripId),
-                UUID.fromString(cancelledBy), reason);
-        return response.isPresent();
+        int updatedRows = tripRepository.cancelTrip(UUID.fromString(tripId), UUID.fromString(cancelledBy), reason);
+        return updatedRows > 0;
     }
 }
