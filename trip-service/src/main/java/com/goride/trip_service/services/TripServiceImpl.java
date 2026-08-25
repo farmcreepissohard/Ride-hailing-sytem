@@ -10,6 +10,7 @@ import org.springframework.web.client.RestClient;
 import com.goride.trip_service.core.ConfigurationProperties;
 import com.goride.trip_service.dto.TripRequestDto;
 import com.goride.trip_service.entities.TripEntity;
+import com.goride.trip_service.publishers.TripEventPublisher;
 import com.goride.trip_service.repositories.TripRepository;
 
 import jakarta.transaction.Transactional;
@@ -23,6 +24,7 @@ import tools.jackson.databind.JsonNode;
 public class TripServiceImpl implements TripService {
     private final TripRepository tripRepository;
     private final ConfigurationProperties configurationProperties;
+    private final TripEventPublisher eventPublisher;
 
     private final RestClient restClient = RestClient.create();
 
@@ -74,6 +76,8 @@ public class TripServiceImpl implements TripService {
                         distanceInKm,
                         totalAmount,
                         driverEarning));
+
+                eventPublisher.publishTripRequest(trip.getId(), trip.getPickupLng(), trip.getPickupLat());
 
                 return trip.getId().toString();
             } else {

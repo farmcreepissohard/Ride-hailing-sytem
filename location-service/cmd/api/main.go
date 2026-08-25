@@ -69,7 +69,7 @@ func main() {
 		panic("Failed to open a channel: " + err.Error())
 	}
 
-	queueName := "trip_created_events"
+	queueName := os.Getenv("TRIP_CREATED_QUEUE")
 	if _, err := ch.QueueDeclare(
 		queueName,
 		true,
