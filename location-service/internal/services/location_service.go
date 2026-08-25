@@ -18,7 +18,7 @@ type LocationService interface {
 	AcceptTrip(ctx context.Context, tripId string, driverId string) error
 	StartTrip(ctx context.Context, tripId string, driverId string) error
 	CompleteTrip(ctx context.Context, tripId string, driverId string) error
-	CancelTrip(ctx context.Context, tripId string, cancelledBy string, reason string) error
+	CancelTrip(ctx context.Context, tripId string, driverId string, reason string) error
 }
 
 type locationService struct {
@@ -43,6 +43,10 @@ func (service *locationService) MatchingNearbyDrivers(lng float64, lat float64, 
 }
 
 func (service *locationService) AcceptTrip(ctx context.Context, tripId string, driverId string) error {
+	if err := service.repo.OnReady(driverId); err != nil {
+		return err
+	}
+
 	isSuccess, err := service.grpcClient.MatchTrip(ctx, tripId, driverId)
 	if err != nil {
 		return err
@@ -56,6 +60,10 @@ func (service *locationService) AcceptTrip(ctx context.Context, tripId string, d
 }
 
 func (service *locationService) StartTrip(ctx context.Context, tripId string, driverId string) error {
+	if err := service.repo.OnBusy(driverId); err != nil {
+		return err
+	}
+
 	isSuccess, err := service.grpcClient.StartTrip(ctx, tripId, driverId)
 	if err != nil {
 		return err
@@ -69,6 +77,10 @@ func (service *locationService) StartTrip(ctx context.Context, tripId string, dr
 }
 
 func (service *locationService) CompleteTrip(ctx context.Context, tripId string, driverId string) error {
+	if err := service.repo.OutBusy(driverId); err != nil {
+		return err
+	}
+
 	isSuccess, err := service.grpcClient.CompleteTrip(ctx, tripId, driverId)
 	if err != nil {
 		return err
@@ -81,8 +93,12 @@ func (service *locationService) CompleteTrip(ctx context.Context, tripId string,
 	return nil
 }
 
-func (service *locationService) CancelTrip(ctx context.Context, tripId string, cancelledBy string, reason string) error {
-	isSuccess, err := service.grpcClient.CancelTrip(ctx, tripId, cancelledBy, reason)
+func (service *locationService) CancelTrip(ctx context.Context, tripId string, driverId string, reason string) error {
+	if err := service.repo.OnCancel(driverId); err != nil {
+		return err
+	}
+
+	isSuccess, err := service.grpcClient.CancelTrip(ctx, tripId, driverId, reason)
 	if err != nil {
 		return err
 	}

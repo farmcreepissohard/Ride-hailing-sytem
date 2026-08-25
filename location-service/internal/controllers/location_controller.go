@@ -78,3 +78,72 @@ func (controller *LocationController) AcceptTrip(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "accept successfully"})
 }
+
+func (controller *LocationController) StartTrip(c *gin.Context) {
+	id := c.GetHeader("X-Driver-Id")
+	if id == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	tripId := c.Param("tripId")
+	if tripId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid trip id"})
+		return
+	}
+
+	if err := controller.service.StartTrip(c.Request.Context(), tripId, id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "start successfully"})
+}
+
+func (controller *LocationController) CompleteTrip(c *gin.Context) {
+	id := c.GetHeader("X-Driver-Id")
+	if id == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	tripId := c.Param("tripId")
+	if tripId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid trip id"})
+		return
+	}
+
+	if err := controller.service.CompleteTrip(c.Request.Context(), tripId, id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "start successfully"})
+}
+
+func (controller *LocationController) CancelTrip(c *gin.Context) {
+	id := c.GetHeader("X-Driver-Id")
+	if id == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	tripId := c.Param("tripId")
+	if tripId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid trip id"})
+		return
+	}
+
+	var req dto.CancelReasonRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	if err := controller.service.CancelTrip(c.Request.Context(), tripId, id, req.Reason); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "start successfully"})
+}
