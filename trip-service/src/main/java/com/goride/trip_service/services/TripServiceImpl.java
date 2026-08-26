@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import com.goride.trip_service.core.ConfigurationProperties;
-import com.goride.trip_service.dto.TripRequestDto;
-import com.goride.trip_service.entities.TripEntity;
+import com.goride.trip_service.models.dto.TripRequestDto;
+import com.goride.trip_service.models.entities.TripEntity;
 import com.goride.trip_service.publishers.TripEventPublisher;
 import com.goride.trip_service.repositories.TripRepository;
 

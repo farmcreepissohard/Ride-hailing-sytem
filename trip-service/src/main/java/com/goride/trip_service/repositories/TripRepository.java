@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.goride.trip_service.entities.TripEntity;
+import com.goride.trip_service.models.entities.TripEntity;
 
 public interface TripRepository extends JpaRepository<TripEntity, UUID> {
 

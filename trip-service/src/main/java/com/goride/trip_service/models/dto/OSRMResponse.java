@@ -1,4 +1,4 @@
-package com.goride.trip_service.dto;
+package com.goride.trip_service.models.dto;
 
 import java.util.List;
 

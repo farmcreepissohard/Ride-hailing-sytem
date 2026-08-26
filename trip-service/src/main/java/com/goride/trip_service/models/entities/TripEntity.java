@@ -1,4 +1,4 @@
-package com.goride.trip_service.entities;
+package com.goride.trip_service.models.entities;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

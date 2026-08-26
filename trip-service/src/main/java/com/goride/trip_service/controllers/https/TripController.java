@@ -3,7 +3,7 @@ package com.goride.trip_service.controllers.https;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.goride.trip_service.dto.TripRequestDto;
+import com.goride.trip_service.models.dto.TripRequestDto;
 import com.goride.trip_service.services.TripService;
 
 import lombok.RequiredArgsConstructor;

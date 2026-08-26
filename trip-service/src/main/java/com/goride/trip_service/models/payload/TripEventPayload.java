@@ -1,4 +1,4 @@
-package com.goride.trip_service.payload;
+package com.goride.trip_service.models.payload;
 
 import lombok.Data;
 
