@@ -1,0 +1,28 @@
+name: Trip Service CI
+
+on:
+  push:
+    paths:
+      - "trip-service/**"
+      - "proto/**"
+
+jobs:
+  build-and-test-java:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lấy code từ GitHub về máy ảo
+        uses: actions/checkout@v4
+
+      - name: Cài đặt Java JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: "maven"
+
+      - name: Chạy Unit Test Java
+        working-directory: ./trip-service
+        run: mvn test
+
+      - name: Test Build Docker Image
+        run: docker build -t goride-trip-service:test -f trip-service/Dockerfile .

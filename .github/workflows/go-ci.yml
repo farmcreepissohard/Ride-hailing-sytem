@@ -1,0 +1,26 @@
+name: Location Service CI
+
+on:
+  push:
+    paths:
+      - "location-service/**"
+
+jobs:
+  build-and-test-go:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lấy code từ GitHub về máy ảo
+        uses: actions/checkout@v4
+
+      - name: Cài đặt Golang 1.27
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.27"
+
+      - name: Chạy Unit Test
+        working-directory: ./location-service
+        run: go test -v ./...
+
+      - name: Test Build Docker Image
+        working-directory: ./location-service
+        run: docker build -t goride-location-service:test .
