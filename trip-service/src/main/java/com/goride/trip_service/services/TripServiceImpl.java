@@ -92,24 +92,55 @@ public class TripServiceImpl implements TripService {
 
     @Transactional
     public boolean matchTrip(final String tripId, final String driverId) {
+        if (tripId == null || tripId.isEmpty()) {
+            throw new IllegalArgumentException("Trip id is required");
+        }
+        if (driverId == null || driverId.isEmpty()) {
+            throw new IllegalArgumentException("Driver id is required");
+        }
+
         int updatedRows = tripRepository.matchingTrip(UUID.fromString(tripId), UUID.fromString(driverId));
         return updatedRows > 0;
     }
 
     @Transactional
     public boolean startTrip(final String tripId, final String driverId) {
+        if (tripId == null || tripId.isEmpty()) {
+            throw new IllegalArgumentException("Trip id is required");
+        }
+        if (driverId == null || driverId.isEmpty()) {
+            throw new IllegalArgumentException("Driver id is required");
+        }
+
         int updatedRows = tripRepository.startTrip(UUID.fromString(tripId), UUID.fromString(driverId));
         return updatedRows > 0;
     }
 
     @Transactional
-    public boolean comepleteTrip(final String tripId, final String driverId) {
+    public boolean completeTrip(final String tripId, final String driverId) {
+        if (tripId == null || tripId.isEmpty()) {
+            throw new IllegalArgumentException("Trip id is required");
+        }
+        if (driverId == null || driverId.isEmpty()) {
+            throw new IllegalArgumentException("Driver id is required");
+        }
+
         int updatedRows = tripRepository.completeTrip(UUID.fromString(tripId), UUID.fromString(driverId));
         return updatedRows > 0;
     }
 
     @Transactional
     public boolean cancelTrip(final String tripId, final String cancelledBy, final String reason) {
+        if (tripId == null || tripId.isEmpty()) {
+            throw new IllegalArgumentException("Trip id is required");
+        }
+        if (cancelledBy == null || cancelledBy.isEmpty()) {
+            throw new IllegalArgumentException("Canceller id is required");
+        }
+        if (reason == null || reason.isEmpty()) {
+            throw new IllegalArgumentException("Unknown reason");
+        }
+
         int updatedRows = tripRepository.cancelTrip(UUID.fromString(tripId), UUID.fromString(cancelledBy), reason);
         return updatedRows > 0;
     }

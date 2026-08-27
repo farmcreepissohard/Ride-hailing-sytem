@@ -17,7 +17,7 @@ public interface TripRepository extends JpaRepository<TripEntity, UUID> {
 			SET driver_id = :driver_id,
 			    trip_status = 'ACCEPTED',
 			    accepted_at = NOW()
-			WHERE id = :trip_id
+			WHERE id = :trip_id AND trip_status = 'PENDING' AND driver_id IS NULL
 			""", nativeQuery = true)
 	int matchingTrip(
 			@Param("trip_id") UUID tripId,
