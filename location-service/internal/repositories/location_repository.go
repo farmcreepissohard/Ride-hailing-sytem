@@ -33,17 +33,17 @@ func (repository *locationRepository) ChangeStatus(id string, status enum.Driver
 	ctx := context.Background()
 
 	if status == enum.StatusOnline {
-		if err := rdb.SRem(ctx, "offline_drivers", id, 0).Err(); err != nil {
+		if err := rdb.SRem(ctx, "offline_drivers", id).Err(); err != nil {
 			return err
 		}
-		if err := rdb.SAdd(ctx, "online_drivers", id, 0).Err(); err != nil {
+		if err := rdb.SAdd(ctx, "online_drivers", id).Err(); err != nil {
 			return err
 		}
 	} else if status == enum.StatusOffline {
-		if err := rdb.SRem(ctx, "online_drivers", id, 0).Err(); err != nil {
+		if err := rdb.SRem(ctx, "online_drivers", id).Err(); err != nil {
 			return err
 		}
-		if err := rdb.SAdd(ctx, "offline_drivers", id, 0).Err(); err != nil {
+		if err := rdb.SAdd(ctx, "offline_drivers", id).Err(); err != nil {
 			return err
 		}
 		if err := rdb.ZRem(ctx, "location_drivers", &redis.GeoLocation{Name: id}).Err(); err != nil {

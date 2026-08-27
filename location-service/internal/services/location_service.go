@@ -31,18 +31,55 @@ func NewLocationService(grpcClient grpc_client.TripGrpcClient, repo repositories
 }
 
 func (service *locationService) ChangeStatus(id string, status enum.DriverStatus) error {
+	if id == "" {
+		return errors.New("Driver id is required")
+	}
+	if status == "" {
+		return errors.New("Status is required")
+	}
+
 	return service.repo.ChangeStatus(id, status)
 }
 
 func (service *locationService) UpdateLocation(id string, lng float64, lat float64) error {
+	if id == "" {
+		return errors.New("Driver id is required")
+	}
+	if lat < -90 || lat > 90 {
+		return errors.New("Invalid latitude value")
+	}
+	if lng < -180 || lng > 180 {
+		return errors.New("Invalid longitude value")
+	}
+
 	return service.repo.UpdateLocation(id, lng, lat)
 }
 
 func (service *locationService) MatchingNearbyDrivers(lng float64, lat float64, radius float64) ([]dto.MatchingResponse, error) {
+	if lat < -90 || lat > 90 {
+		return nil, errors.New("Invalid latitude value")
+	}
+	if lng < -180 || lng > 180 {
+		return nil, errors.New("Invalid longitude value")
+	}
+	if radius < 0 {
+		return nil, errors.New("Invalid radius value")
+	}
+
 	return service.repo.MatchingNearbyDrivers(lng, lat, radius)
 }
 
 func (service *locationService) AcceptTrip(ctx context.Context, tripId string, driverId string) error {
+	if ctx == nil {
+		return errors.New("Context is required")
+	}
+	if tripId == "" {
+		return errors.New("Trip id is required")
+	}
+	if driverId == "" {
+		return errors.New("Driver id is required")
+	}
+
 	if err := service.repo.OnReady(driverId); err != nil {
 		return err
 	}
@@ -60,6 +97,16 @@ func (service *locationService) AcceptTrip(ctx context.Context, tripId string, d
 }
 
 func (service *locationService) StartTrip(ctx context.Context, tripId string, driverId string) error {
+	if ctx == nil {
+		return errors.New("Context is required")
+	}
+	if tripId == "" {
+		return errors.New("Trip id is required")
+	}
+	if driverId == "" {
+		return errors.New("Driver id is required")
+	}
+
 	if err := service.repo.OnBusy(driverId); err != nil {
 		return err
 	}
@@ -77,6 +124,16 @@ func (service *locationService) StartTrip(ctx context.Context, tripId string, dr
 }
 
 func (service *locationService) CompleteTrip(ctx context.Context, tripId string, driverId string) error {
+	if ctx == nil {
+		return errors.New("Context is required")
+	}
+	if tripId == "" {
+		return errors.New("Trip id is required")
+	}
+	if driverId == "" {
+		return errors.New("Driver id is required")
+	}
+
 	if err := service.repo.OutBusy(driverId); err != nil {
 		return err
 	}
@@ -87,13 +144,26 @@ func (service *locationService) CompleteTrip(ctx context.Context, tripId string,
 	}
 
 	if !isSuccess {
-		return errors.New("Can not start trip, please try again later")
+		return errors.New("Can not complete trip, please try again later")
 	}
 
 	return nil
 }
 
 func (service *locationService) CancelTrip(ctx context.Context, tripId string, driverId string, reason string) error {
+	if ctx == nil {
+		return errors.New("Context is required")
+	}
+	if tripId == "" {
+		return errors.New("Trip id is required")
+	}
+	if driverId == "" {
+		return errors.New("Driver id is required")
+	}
+	if reason == "" {
+		return errors.New("Unknown reason")
+	}
+
 	if err := service.repo.OnCancel(driverId); err != nil {
 		return err
 	}
@@ -104,7 +174,7 @@ func (service *locationService) CancelTrip(ctx context.Context, tripId string, d
 	}
 
 	if !isSuccess {
-		return errors.New("Can not start trip, please try again later")
+		return errors.New("Not allowed to cancel this trip")
 	}
 
 	return nil
