@@ -2,10 +2,10 @@ FROM maven:3.9.16-eclipse-temurin-21 AS builder
 
 WORKDIR /app
 
-COPY pom.xml .
+COPY trip-service/pom.xml .
 RUN mvn dependency:go-offline
 
-COPY src ./src
+COPY trip-service/src ./src
 COPY proto ./proto
 
 RUN mvn clean package -DskipTests
