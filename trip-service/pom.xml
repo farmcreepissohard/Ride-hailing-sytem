@@ -158,7 +158,7 @@
                     <pluginId>grpc-java</pluginId>
                     <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.58.0:exe:${os.detected.classifier}</pluginArtifact>
                     <!-- Trỏ ra ngoài thư mục gốc chứa file trip_command.proto -->
-                    <protoSourceRoot>../proto</protoSourceRoot> 
+                    <protoSourceRoot>${project.basedir}/proto</protoSourceRoot> 
 					<includes>
         				<include>trip_command.proto</include>
     				</includes>

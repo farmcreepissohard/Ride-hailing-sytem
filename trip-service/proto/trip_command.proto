@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package trip;
+
+option go_package = "./pkg/pb";
+option java_package = "com.goride.grpc";
+option java_multiple_files = true; 
+
+enum ResponseStatus{
+    SUCCESS = 0;
+    UNSUCCESS = 1;
+}
+
+message TripActionRequest {
+    string trip_id = 1;
+    string driver_id = 2;
+}
+
+message CancelTripRequest {
+    string trip_id = 1;
+    string id_cancelled_by = 2;
+    string reason = 3;
+}
+
+message TripResponse {
+    string trip_id = 1;
+    ResponseStatus status = 2;
+    optional string message = 3;
+}
+
+service UpdateTripInformation {
+    rpc MatchTrip (TripActionRequest) returns (TripResponse);
+    rpc StartTrip (TripActionRequest) returns (TripResponse);
+    rpc CompleteTrip (TripActionRequest) returns (TripResponse);
+    rpc CancelTrip (CancelTripRequest) returns (TripResponse);
+}

@@ -10,5 +10,29 @@ services:
     volumes:
       - trip_service_postgresql_data:/var/lib/postgresql/data
 
+  trip-service:
+    image: goride-trip-service:1.0
+  ports:
+    - "8080:8080"
+    - "9090:9090"
+  depends_on:
+    - trip_service_postgresql
+    - rabbitmq
+  environment:
+    - DB_URL=${DB_URL}
+    - DB_PASSWORD=${POSTGRESQL_NAME}
+    - DB_NAME=${POSTGRESQL_PASSWORD}
+    - DB_USER=${SERVICE_USER}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
+    - RABBITMQ_PORT=${RABBITMQ_PORT}
+    - RABBITMQ_USER=${SERVICE_USER}
+    - RABBITMQ_PASS=${RABBITMQ_PASS}
+    - TRIP_CREATED_QUEUE=${TRIP_CREATED_QUEUE}
+    - OSRM_URL=${OSRM_URL}
+    - BASE_FARE=${BASE_FARE}
+    - PRICE_PER_KM=${PRICE_PER_KM}
+    - DRIVER_COMMISSION=${DRIVER_COMMISSION}
+    
+
 volumes:
   trip_service_postgresql_data:

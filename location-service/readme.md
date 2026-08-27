@@ -17,3 +17,6 @@ my-gin-project/
 ├── go.mod # Quản lý dependencies
 └── go.sum # Checksum của các dependencies
 ```
+
+go test -coverprofile=coverage.out ./...
+go tool cover -html=coverage.out

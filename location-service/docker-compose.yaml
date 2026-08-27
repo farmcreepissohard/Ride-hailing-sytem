@@ -5,6 +5,21 @@ services:
       - "6379:6379"
     volumes:
       - location_service_redis_data:/data
+
+  location-service:
+    image: goride-location-service:1.0
+    ports:
+      - "8081:8081"
+    depends_on:
+      - location_service_redis
+      - rabbitmq
+      - trip-service
+    environment:
+      - REDIS_DB_ADDRESS=location_service_redis:6379
+      - REDIS_DB_PASSWORD=${REDIS_DB_PASSWORD}
+      - TRIP_CREATED_QUEUE=${TRIP_CREATED_QUEUE}
+      - AMQP_URL=${AMQP_URL}
+      - GRPC_ADDRESS=${GRPC_ADDRESS}
     
 volumes:
   location_service_redis_data: 
