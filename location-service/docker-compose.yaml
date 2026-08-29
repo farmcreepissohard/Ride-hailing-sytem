@@ -8,8 +8,8 @@ services:
 
   location-service:
     image: goride-location-service:1.0
-    ports:
-      - "8081:8081"
+    expose:
+      - "8081"
     depends_on:
       - location_service_redis
       - rabbitmq
