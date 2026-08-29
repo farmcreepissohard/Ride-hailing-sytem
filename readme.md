@@ -18,7 +18,7 @@ GoRide is a highly scalable, event-driven backend architecture for a ride-hailin
 - **Message Broker (RabbitMQ):** Handles asynchronous events (e.g., `trip_created_events`) to ensure loose coupling between services.
 - **gRPC:** Used for low-latency, internal synchronous communication between `location-service` and `trip-service`.
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Category                | Technologies                                       |
 | :---------------------- | :------------------------------------------------- |
