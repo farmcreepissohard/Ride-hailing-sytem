@@ -5,9 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(locationController *controllers.LocationController) *gin.Engine {
-	r := gin.Default()
-
+func LocationRoutes(r *gin.Engine, locationController *controllers.LocationController) {
 	v1 := r.Group("/api/v1")
 	{
 		v1.PATCH("/driver", locationController.ChangeStatus)
@@ -17,6 +15,4 @@ func SetupRouter(locationController *controllers.LocationController) *gin.Engine
 		v1.POST("/trips/:tripId/complete", locationController.CompleteTrip)
 		v1.POST("/trips/:tripId/cancel", locationController.CancelTrip)
 	}
-
-	return r
 }
