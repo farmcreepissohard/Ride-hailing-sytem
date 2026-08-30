@@ -118,7 +118,7 @@ func (controller *LocationController) CompleteTrip(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "start successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "complete successfully"})
 }
 
 func (controller *LocationController) CancelTrip(c *gin.Context) {
@@ -145,5 +145,5 @@ func (controller *LocationController) CancelTrip(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "start successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "cancel successfully"})
 }

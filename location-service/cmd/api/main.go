@@ -11,6 +11,7 @@ import (
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/repositories"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/routes"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/services"
+	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/transport"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/pkg/pb"
 	"github.com/joho/godotenv"
 	"github.com/rabbitmq/amqp091-go"
@@ -57,6 +58,11 @@ func main() {
 
 	//-----------------
 
+	hub := transport.NewHub()
+	wsController := controllers.NewWsController(hub, locationService)
+
+	//-----------------
+
 	conn, err := amqp091.Dial(os.Getenv("AMQP_URL"))
 	defer conn.Close()
 	if err != nil {
@@ -84,6 +90,6 @@ func main() {
 	tripEventHandler := handlers.NewTripEventHanlder(&locationService)
 	tripEventHandler.Consume(ch, queueName)
 
-	r := routes.SetupRouter(locationController)
+	r := routes.SetupRouter(routes.RouterDependency{LocationController: locationController, WsController: wsController})
 	r.Run(":8081")
 }
