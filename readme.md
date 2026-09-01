@@ -1,8 +1,9 @@
 # GoRide - Microservics Ride-Hailing Platform
 
 ![Java](https://img.shields.io/badge/Java-21-orange.svg)
-![Golang](https://img.shields.io/badge/Go-1.27-blue.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-brightgreen.svg)
+![Gin](https://img.shields.io/badge/Gin-v1.12.0-blue.svg)
+![Golang](https://img.shields.io/badge/Go-1.27-blue.svg)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg)
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF.svg)
 
