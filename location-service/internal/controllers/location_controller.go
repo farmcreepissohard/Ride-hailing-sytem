@@ -9,11 +9,12 @@ import (
 )
 
 type LocationController struct {
-	service services.LocationService
+	service  services.LocationService
+	dispatch services.DispatchService
 }
 
-func NewLocationController(service services.LocationService) *LocationController {
-	return &LocationController{service: service}
+func NewLocationController(service services.LocationService, dispatch services.DispatchService) *LocationController {
+	return &LocationController{service: service, dispatch: dispatch}
 }
 
 func (controller *LocationController) ChangeStatus(c *gin.Context) {
@@ -75,8 +76,27 @@ func (controller *LocationController) AcceptTrip(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	controller.dispatch.NotifyResponse(tripId, true)
 
 	c.JSON(http.StatusOK, gin.H{"message": "accept successfully"})
+}
+
+func (controller *LocationController) DeclineTrip(c *gin.Context) {
+	id := c.GetHeader("X-Driver-Id")
+	if id == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	tripId := c.Param("tripId")
+	if tripId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid trip id"})
+		return
+	}
+
+	controller.dispatch.NotifyResponse(tripId, false)
+
+	c.JSON(http.StatusOK, gin.H{"message": "decline successfully"})
 }
 
 func (controller *LocationController) StartTrip(c *gin.Context) {

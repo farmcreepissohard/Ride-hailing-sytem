@@ -5,13 +5,13 @@ import (
 	"log"
 	"os"
 
+	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/consumers"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/controllers"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/grpc_client"
-	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/handlers"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/repositories"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/routes"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/services"
-	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/transport"
+	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/ws"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/pkg/pb"
 	"github.com/joho/godotenv"
 	"github.com/rabbitmq/amqp091-go"
@@ -53,12 +53,13 @@ func main() {
 
 	grpcClient := grpc_client.NewTripGrpcClient(pb.NewUpdateTripInformationClient(grpcConn), grpcConn)
 	locationService := services.NewLocationService(grpcClient, locationRepo)
+	dispatchService := services.NewDispatchService(locationRepo, rdb)
 
-	locationController := controllers.NewLocationController(locationService)
+	locationController := controllers.NewLocationController(locationService, dispatchService)
 
 	//-----------------
 
-	hub := transport.NewHub()
+	hub := ws.NewHub(rdb)
 	wsController := controllers.NewWsController(hub, locationService)
 
 	//-----------------
@@ -87,7 +88,7 @@ func main() {
 		panic("Failed to declare a queue: " + err.Error())
 	}
 
-	tripEventHandler := handlers.NewTripEventHanlder(&locationService)
+	tripEventHandler := consumers.NewTripEventConsumer(dispatchService)
 	tripEventHandler.Consume(ch, queueName)
 
 	r := routes.SetupRouter(routes.RouterDependency{LocationController: locationController, WsController: wsController})

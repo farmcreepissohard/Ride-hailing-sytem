@@ -1,4 +1,4 @@
-package handlers
+package consumers
 
 import (
 	"encoding/json"
@@ -9,15 +9,15 @@ import (
 	"github.com/rabbitmq/amqp091-go"
 )
 
-type TripEventHandler struct {
-	service services.LocationService
+type TripEventConsumer struct {
+	service services.DispatchService
 }
 
-func NewTripEventHanlder(service *services.LocationService) *TripEventHandler {
-	return &TripEventHandler{service: *service}
+func NewTripEventConsumer(service services.DispatchService) *TripEventConsumer {
+	return &TripEventConsumer{service: service}
 }
 
-func (h *TripEventHandler) Consume(ch *amqp091.Channel, queueName string) {
+func (h *TripEventConsumer) Consume(ch *amqp091.Channel, queueName string) {
 	msgs, err := ch.Consume(queueName, "", false, false, false, false, nil)
 	if err != nil {
 		log.Fatalf("Failed to register a consumer: %v", err)
@@ -36,14 +36,10 @@ func (h *TripEventHandler) Consume(ch *amqp091.Channel, queueName string) {
 				continue
 			}
 
-			drivers, err := h.service.MatchingNearbyDrivers(payload.Longitude, payload.Latitude, 3.0)
-			if err != nil {
-				log.Printf("Failed to search Redis: %v", err)
+			if err := h.service.HandlingTrip(payload.TripID, payload.Longitude, payload.Latitude, 3.0); err != nil {
 				d.Nack(false, true)
 				continue
 			}
-
-			log.Printf("Found %d drivers for Trip %s", len(drivers), payload.TripID)
 
 			d.Ack(false)
 		}

@@ -8,7 +8,7 @@ import (
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/models/dto"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/models/enum"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/services"
-	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/transport"
+	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/ws"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
@@ -20,25 +20,25 @@ var upgraded = websocket.Upgrader{
 }
 
 type WsController struct {
-	hub             *transport.Hub
+	hub             *ws.Hub
 	locationService services.LocationService
 }
 
-func NewWsController(hub *transport.Hub, locationService services.LocationService) *WsController {
+func NewWsController(hub *ws.Hub, locationService services.LocationService) *WsController {
 	return &WsController{hub: hub, locationService: locationService}
 }
 
-func (c *WsController) HandleConnection(ctx *gin.Context) {
-	conn, err := upgraded.Upgrade(ctx.Writer, ctx.Request, nil)
+func (wsController *WsController) HandleConnection(c *gin.Context) {
+	conn, err := upgraded.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		log.Println("Failed in Upgrade:", err)
 		return
 	}
 	defer conn.Close()
 
-	driverId := ctx.Query("user_id")
-	c.hub.Add(driverId, conn)
-	defer c.hub.Remove(driverId, conn)
+	driverId := c.Query("user_id")
+	wsController.hub.Add(driverId, conn)
+	defer wsController.hub.Remove(driverId, conn)
 
 	for {
 		var req dto.WebsocketRequest
@@ -57,7 +57,7 @@ func (c *WsController) HandleConnection(ctx *gin.Context) {
 					log.Println("Bad json format", err.Error())
 					break
 				}
-				if err := c.locationService.UpdateLocation(driverId, locationRequestDto.Longitude, locationRequestDto.Latitude); err != nil {
+				if err := wsController.locationService.UpdateLocation(driverId, locationRequestDto.Longitude, locationRequestDto.Latitude); err != nil {
 					log.Println("Update location failed: ", err.Error())
 					break
 				}
