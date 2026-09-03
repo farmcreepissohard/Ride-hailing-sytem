@@ -42,31 +42,33 @@ public class TripServiceImplTest {
     @InjectMocks
     private TripServiceImpl tripService;
 
-    @Nested
-    @DisplayName("handleTripRequest() function test")
-    class HandlTripRequestTests {
+    // @Nested
+    // @DisplayName("handleTripRequest() function test")
+    // class HandlTripRequestTests {
 
-        // @Test
-        // @DisplayName("Successful")
-        // void success() {
-        // final LocationDto pickupLocation =
-        // LocationRandom.getRandomLocationDto("pickup-location");
-        // final LocationDto dropoffLocation =
-        // LocationRandom.getRandomLocationDto("dropoff-location");
-        // final TripRequestDto req = new TripRequestDto(pickupLocation,
-        // dropoffLocation);
-        // final UUID customerId = UUID.randomUUID();
+    // // @Test
+    // // @DisplayName("Successful")
+    // // void success() {
+    // // final LocationDto pickupLocation =
+    // // LocationRandom.getRandomLocationDto("pickup-location");
+    // // final LocationDto dropoffLocation =
+    // // LocationRandom.getRandomLocationDto("dropoff-location");
+    // // final TripRequestDto req = new TripRequestDto(pickupLocation,
+    // // dropoffLocation);
+    // // final UUID customerId = UUID.randomUUID();
 
-        // when(configurationProperties.getOsrmBaseUrl()).thenReturn("http://mock-osrm-url.com");
+    // //
+    // when(configurationProperties.getOsrmBaseUrl()).thenReturn("http://mock-osrm-url.com");
 
-        // assertDoesNotThrow(() -> tripService.handleTripRequest(customerId.toString(),
-        // req));
+    // // assertDoesNotThrow(() ->
+    // tripService.handleTripRequest(customerId.toString(),
+    // // req));
 
-        // verify(eventPublisher, times(1)).publishTripRequest(customerId,
-        // pickupLocation.getLng(),
-        // pickupLocation.getLat());
-        // }
-    }
+    // // verify(eventPublisher, times(1)).publishTripRequest(customerId,
+    // // pickupLocation.getLng(),
+    // // pickupLocation.getLat());
+    // // }
+    // }
 
     @Nested
     @DisplayName("matchTrip() function test")
@@ -460,6 +462,59 @@ public class TripServiceImplTest {
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                     () -> tripService.cancelTrip(tripId.toString(), cancelledBy.toString(), reason));
             assertEquals("Unknown reason", exception.getMessage());
+            verifyNoInteractions(tripRepository);
+        }
+    }
+
+    @Nested
+    @DisplayName("noDriverFound() function tests")
+    class NoDriverFoundTests {
+
+        @Test
+        @DisplayName("successful")
+        void shouldSuccess() {
+            final UUID tripId = UUID.randomUUID();
+            when(tripRepository.noDriverFound(tripId)).thenReturn(1);
+            assertTrue(tripService.noDriverFound(tripId.toString()));
+            verify(tripRepository, times(1)).noDriverFound(tripId);
+        }
+
+        @Test
+        @DisplayName("Failed when no modifying in database")
+        void shouldFailedWhenDatabaseNoUpdate() {
+            final UUID tripId = UUID.randomUUID();
+            when(tripRepository.noDriverFound(tripId)).thenReturn(0);
+            assertFalse(tripService.noDriverFound(tripId.toString()));
+            verify(tripRepository, times(1)).noDriverFound(tripId);
+        }
+
+        @Test
+        @DisplayName("Failed when empty tripId")
+        void shouldFailedWhenEmptyTripId() {
+            final String tripId = "";
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                    () -> tripService.noDriverFound(tripId));
+            assertEquals("Trip id is required", exception.getMessage());
+            verifyNoInteractions(tripRepository);
+        }
+
+        @Test
+        @DisplayName("Failed when null tripId")
+        void shouldFailedWhenNullTripId() {
+            final String tripId = null;
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                    () -> tripService.noDriverFound(tripId));
+            assertEquals("Trip id is required", exception.getMessage());
+            verifyNoInteractions(tripRepository);
+        }
+
+        @Test
+        @DisplayName("Failed when invalid UUID tripId")
+        void shouldFailedWhenInvalidTripId() {
+            final String tripId = "asdf";
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                    () -> tripService.noDriverFound(tripId));
+            assertTrue(exception.getMessage().contains("Invalid UUID string"));
             verifyNoInteractions(tripRepository);
         }
     }

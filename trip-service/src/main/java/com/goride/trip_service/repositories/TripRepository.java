@@ -61,4 +61,11 @@ public interface TripRepository extends JpaRepository<TripEntity, UUID> {
 			@Param("cancelled_by") UUID cancelledBy,
 			@Param("cancelled_reason") String cancelledReason);
 
+	@Modifying(clearAutomatically = true)
+	@Query(value = """
+			UPDATE trips
+			SET trip_status = 'NO_DRIVER_FOUND'
+			WHERE id = :trip_id AND trip_status = 'PENDING'
+			""", nativeQuery = true)
+	int noDriverFound(@Param("trip_id") UUID tripId);
 }

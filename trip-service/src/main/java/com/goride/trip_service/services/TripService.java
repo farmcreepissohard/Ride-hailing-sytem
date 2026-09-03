@@ -13,4 +13,6 @@ public interface TripService {
     public boolean completeTrip(final String tripId, final String driverId);
 
     public boolean cancelTrip(final String tripId, final String cancelledBy, final String reason);
+
+    public boolean noDriverFound(final String tripId);
 }

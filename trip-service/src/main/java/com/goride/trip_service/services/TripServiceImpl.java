@@ -144,4 +144,13 @@ public class TripServiceImpl implements TripService {
         int updatedRows = tripRepository.cancelTrip(UUID.fromString(tripId), UUID.fromString(cancelledBy), reason);
         return updatedRows > 0;
     }
+
+    @Transactional
+    public boolean noDriverFound(final String tripId) {
+        if (tripId == null || tripId.isEmpty()) {
+            throw new IllegalArgumentException("Trip id is required");
+        }
+        int updateRows = tripRepository.noDriverFound(UUID.fromString(tripId));
+        return updateRows > 0;
+    }
 }

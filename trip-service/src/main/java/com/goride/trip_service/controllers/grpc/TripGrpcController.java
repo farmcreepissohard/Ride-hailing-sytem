@@ -3,6 +3,7 @@ package com.goride.trip_service.controllers.grpc;
 import org.springframework.grpc.server.service.GrpcService;
 
 import com.goride.grpc.CancelTripRequest;
+import com.goride.grpc.NoDriverRequest;
 import com.goride.grpc.ResponseStatus;
 import com.goride.grpc.TripActionRequest;
 import com.goride.grpc.TripResponse;
@@ -62,5 +63,12 @@ public class TripGrpcController extends UpdateTripInformationImplBase {
         final boolean isSuccess = tripService.cancelTrip(request.getTripId(), request.getIdCancelledBy(),
                 request.getReason());
         handleResponse(isSuccess, responseObserver, request.getTripId(), "Forbidden on cancelling trip");
+    }
+
+    @Override
+    public void noDriverFound(NoDriverRequest request,
+            StreamObserver<com.goride.grpc.TripResponse> responseObserver) {
+        final boolean isSuccess = tripService.noDriverFound(request.getTripId());
+        handleResponse(isSuccess, responseObserver, request.getTripId(), "No driver found error state");
     }
 }

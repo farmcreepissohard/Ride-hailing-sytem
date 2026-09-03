@@ -1,0 +1,6 @@
+ALTER TABLE trips
+DROP CONSTRAINT check_status;
+
+ALTER TABLE trips
+ADD CONSTRAINT check_status 
+CHECK (trip_status IN ('PENDING', 'ACCEPTED', 'ON_TRIP', 'COMPLETED', 'CANCELLED', 'NO_DRIVER_FOUND'));

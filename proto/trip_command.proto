@@ -22,6 +22,10 @@ message CancelTripRequest {
     string reason = 3;
 }
 
+message NoDriverRequest {
+    string trip_id = 1
+}
+
 message TripResponse {
     string trip_id = 1;
     ResponseStatus status = 2;
@@ -33,4 +37,5 @@ service UpdateTripInformation {
     rpc StartTrip (TripActionRequest) returns (TripResponse);
     rpc CompleteTrip (TripActionRequest) returns (TripResponse);
     rpc CancelTrip (CancelTripRequest) returns (TripResponse);
+    rpc NoDriverFound(NoDriverRequest) return (TripResponse);
 }
