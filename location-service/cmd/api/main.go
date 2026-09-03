@@ -53,7 +53,7 @@ func main() {
 
 	grpcClient := grpc_client.NewTripGrpcClient(pb.NewUpdateTripInformationClient(grpcConn), grpcConn)
 	locationService := services.NewLocationService(grpcClient, locationRepo)
-	dispatchService := services.NewDispatchService(locationRepo, rdb)
+	dispatchService := services.NewDispatchService(locationRepo, grpcClient, rdb)
 
 	locationController := controllers.NewLocationController(locationService, dispatchService)
 

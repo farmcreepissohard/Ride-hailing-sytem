@@ -66,6 +66,12 @@ type MockTripGrpcClient struct {
 	mock.Mock
 }
 
+// Timeout implements [grpc_client.TripGrpcClient].
+func (m *MockTripGrpcClient) Timeout(ctx context.Context, tripId string) (bool, error) {
+	args := m.Called(ctx, tripId)
+	return args.Bool(0), args.Error(1)
+}
+
 // CancelTrip implements [grpc_client.TripGrpcClient].
 func (m *MockTripGrpcClient) CancelTrip(ctx context.Context, tripId string, cancelledBy string, reason string) (bool, error) {
 	args := m.Called(ctx, tripId, cancelledBy, reason)

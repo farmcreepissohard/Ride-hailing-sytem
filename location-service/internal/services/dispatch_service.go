@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/grpc_client"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/models/dto"
 	"github.com/farmcreepissohard/Ride-hailing-sytem/internal/repositories"
 	"github.com/redis/go-redis/v9"
@@ -19,12 +20,13 @@ type DispatchService interface {
 
 type dispatchService struct {
 	repo        repositories.LocationRepository
+	grpcClient  grpc_client.TripGrpcClient
 	redisClient *redis.Client
 	mutex       sync.RWMutex
 	waitList    map[string]chan bool
 }
 
-func NewDispatchService(repo repositories.LocationRepository, redisClient *redis.Client) DispatchService {
+func NewDispatchService(repo repositories.LocationRepository, grpcClient grpc_client.TripGrpcClient, redisClient *redis.Client) DispatchService {
 	return &dispatchService{repo: repo, redisClient: redisClient, waitList: make(map[string]chan bool)}
 }
 
@@ -76,6 +78,7 @@ func (service *dispatchService) HandlingTrip(tripId string, longitude float64, l
 		}
 		if !isAccepted {
 			log.Printf("Trip %s No drivers accept", tripId)
+			service.grpcClient.Timeout(context.Background(), tripId)
 		}
 	}(tripId, drivers)
 
