@@ -15,6 +15,7 @@ type TripGrpcClient interface {
 	StartTrip(ctx context.Context, tripId string, driverId string) (bool, error)
 	CompleteTrip(ctx context.Context, tripId string, driverId string) (bool, error)
 	CancelTrip(ctx context.Context, tripId string, cancelledBy string, reason string) (bool, error)
+	Timeout(ctx context.Context, tripId string) (bool, error)
 }
 
 type tripGrpcClient struct {
@@ -90,5 +91,17 @@ func (tripGrpc *tripGrpcClient) CancelTrip(ctx context.Context, tripId string, c
 	}
 
 	res, err := tripGrpc.client.CancelTrip(ctx, &req)
+	return tripGrpc.handler(res, err)
+}
+
+func (tripGrpc *tripGrpcClient) Timeout(ctx context.Context, tripId string) (bool, error) {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	req := pb.NoDriverRequest{
+		TripId: tripId,
+	}
+
+	res, err := tripGrpc.client.NoDriverFound(ctx, &req)
 	return tripGrpc.handler(res, err)
 }

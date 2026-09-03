@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.2
 // - protoc             v3.21.12
-// source: trip_command.proto
+// source: proto/trip_command.proto
 
 package pb
 
@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UpdateTripInformation_MatchTrip_FullMethodName    = "/trip.UpdateTripInformation/MatchTrip"
-	UpdateTripInformation_StartTrip_FullMethodName    = "/trip.UpdateTripInformation/StartTrip"
-	UpdateTripInformation_CompleteTrip_FullMethodName = "/trip.UpdateTripInformation/CompleteTrip"
-	UpdateTripInformation_CancelTrip_FullMethodName   = "/trip.UpdateTripInformation/CancelTrip"
+	UpdateTripInformation_MatchTrip_FullMethodName     = "/trip.UpdateTripInformation/MatchTrip"
+	UpdateTripInformation_StartTrip_FullMethodName     = "/trip.UpdateTripInformation/StartTrip"
+	UpdateTripInformation_CompleteTrip_FullMethodName  = "/trip.UpdateTripInformation/CompleteTrip"
+	UpdateTripInformation_CancelTrip_FullMethodName    = "/trip.UpdateTripInformation/CancelTrip"
+	UpdateTripInformation_NoDriverFound_FullMethodName = "/trip.UpdateTripInformation/NoDriverFound"
 )
 
 // UpdateTripInformationClient is the client API for UpdateTripInformation service.
@@ -33,6 +34,7 @@ type UpdateTripInformationClient interface {
 	StartTrip(ctx context.Context, in *TripActionRequest, opts ...grpc.CallOption) (*TripResponse, error)
 	CompleteTrip(ctx context.Context, in *TripActionRequest, opts ...grpc.CallOption) (*TripResponse, error)
 	CancelTrip(ctx context.Context, in *CancelTripRequest, opts ...grpc.CallOption) (*TripResponse, error)
+	NoDriverFound(ctx context.Context, in *NoDriverRequest, opts ...grpc.CallOption) (*TripResponse, error)
 }
 
 type updateTripInformationClient struct {
@@ -83,6 +85,16 @@ func (c *updateTripInformationClient) CancelTrip(ctx context.Context, in *Cancel
 	return out, nil
 }
 
+func (c *updateTripInformationClient) NoDriverFound(ctx context.Context, in *NoDriverRequest, opts ...grpc.CallOption) (*TripResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TripResponse)
+	err := c.cc.Invoke(ctx, UpdateTripInformation_NoDriverFound_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UpdateTripInformationServer is the server API for UpdateTripInformation service.
 // All implementations must embed UnimplementedUpdateTripInformationServer
 // for forward compatibility.
@@ -91,6 +103,7 @@ type UpdateTripInformationServer interface {
 	StartTrip(context.Context, *TripActionRequest) (*TripResponse, error)
 	CompleteTrip(context.Context, *TripActionRequest) (*TripResponse, error)
 	CancelTrip(context.Context, *CancelTripRequest) (*TripResponse, error)
+	NoDriverFound(context.Context, *NoDriverRequest) (*TripResponse, error)
 	mustEmbedUnimplementedUpdateTripInformationServer()
 }
 
@@ -112,6 +125,9 @@ func (UnimplementedUpdateTripInformationServer) CompleteTrip(context.Context, *T
 }
 func (UnimplementedUpdateTripInformationServer) CancelTrip(context.Context, *CancelTripRequest) (*TripResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CancelTrip not implemented")
+}
+func (UnimplementedUpdateTripInformationServer) NoDriverFound(context.Context, *NoDriverRequest) (*TripResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method NoDriverFound not implemented")
 }
 func (UnimplementedUpdateTripInformationServer) mustEmbedUnimplementedUpdateTripInformationServer() {}
 func (UnimplementedUpdateTripInformationServer) testEmbeddedByValue()                               {}
@@ -206,6 +222,24 @@ func _UpdateTripInformation_CancelTrip_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UpdateTripInformation_NoDriverFound_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NoDriverRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UpdateTripInformationServer).NoDriverFound(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UpdateTripInformation_NoDriverFound_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UpdateTripInformationServer).NoDriverFound(ctx, req.(*NoDriverRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UpdateTripInformation_ServiceDesc is the grpc.ServiceDesc for UpdateTripInformation service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -229,7 +263,11 @@ var UpdateTripInformation_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "CancelTrip",
 			Handler:    _UpdateTripInformation_CancelTrip_Handler,
 		},
+		{
+			MethodName: "NoDriverFound",
+			Handler:    _UpdateTripInformation_NoDriverFound_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "trip_command.proto",
+	Metadata: "proto/trip_command.proto",
 }
